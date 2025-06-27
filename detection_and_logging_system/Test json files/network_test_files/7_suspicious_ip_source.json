@@ -1,0 +1,15 @@
+{
+    "log_source": "firewall_fw_01",
+    "timestamp": "2025-06-27T22:50:30Z",
+    "event_description": "DENY: Connection from known malicious IP attempt to internal server",
+    "source_ip": "1.2.3.4",
+    "destination_ip": "10.0.0.30",
+    "protocol": "TCP",
+    "port": 3389,
+    "action": "DENY",
+    "username": null,
+    "details": {
+        "rule_id": "BLOCK-MALICIOUS-IP",
+        "traffic_type": "RDP"
+    }
+}
