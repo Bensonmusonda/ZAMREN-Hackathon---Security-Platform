@@ -1,0 +1,14 @@
+{
+    "log_source": "auth_server_ssh_01",
+    "timestamp": "2025-06-27T22:50:25Z",
+    "event_description": "Failed password for user guest from 203.0.113.10 port 50005 ssh2",
+    "source_ip": "203.0.113.10",
+    "destination_ip": "10.0.0.20",
+    "protocol": "SSH",
+    "port": 22,
+    "action": "failed_login",
+    "username": "guest",
+    "details": {
+        "reason": "wrong_password"
+    }
+}

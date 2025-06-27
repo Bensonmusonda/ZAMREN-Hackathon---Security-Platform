@@ -1,0 +1,14 @@
+{
+    "log_source": "proxy_server_02",
+    "timestamp": "2025-06-27T22:51:05Z",
+    "event_description": "Connection to known malicious C2 IP detected",
+    "source_ip": "10.0.0.60",
+    "destination_ip": "1.2.3.4",
+    "protocol": "TCP",
+    "port": 8080,
+    "action": "ALERT",
+    "username": "internal_host_01",
+    "details": {
+        "alert_source": "ThreatIntelFeed"
+    }
+}

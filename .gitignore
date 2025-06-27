@@ -1,0 +1,23 @@
+# .gitignore
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+*/.venv/
+*/venv/
+*/env/
+
+# IDE specific (e.g., VS Code)
+.vscode/
+
+# Database
+*.sqlite3
+*.db
+*.db-journal
+*.log # if your app logs directly to files in the repo
+threat_log_db.sqlite # if you're using a specific SQLite file name

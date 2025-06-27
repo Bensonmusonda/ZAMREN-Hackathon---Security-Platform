@@ -1,0 +1,20 @@
+{
+    "log_source": "firewall_fw_02",
+    "timestamp": "2025-06-27T22:50:50Z",
+    "event_description": "Deny: Possible port scan from 203.0.113.20 to 10.0.0.35 on multiple ports (21, 23, 80, 443)",
+    "source_ip": "203.0.113.20",
+    "destination_ip": "10.0.0.35",
+    "protocol": "TCP",
+    "port": null,
+    "action": "DENY",
+    "username": null,
+    "details": {
+        "scan_type": "SYN_SCAN",
+        "ports_hit": [
+            21,
+            23,
+            80,
+            443
+        ]
+    }
+}

@@ -1,0 +1,266 @@
+[
+    {
+        "filename": "1_normal_web_access.json",
+        "content": {
+            "log_source": "web_server_nginx_01",
+            "timestamp": "2025-06-27T22:50:00Z",
+            "event_description": "GET /index.html HTTP/1.1\" 200 1500 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36",
+            "source_ip": "192.168.10.100",
+            "destination_ip": "10.0.0.10",
+            "protocol": "HTTP",
+            "port": 80,
+            "action": "GET",
+            "username": null,
+            "details": {
+                "http_method": "GET",
+                "request_path": "/index.html",
+                "status_code": 200,
+                "bytes_sent": 1500
+            }
+        }
+    },
+    {
+        "filename": "2_failed_login_brute_force_1.json",
+        "content": {
+            "log_source": "auth_server_ssh_01",
+            "timestamp": "2025-06-27T22:50:05Z",
+            "event_description": "Failed password for invalid user admin from 203.0.113.10 port 50001 ssh2",
+            "source_ip": "203.0.113.10",
+            "destination_ip": "10.0.0.20",
+            "protocol": "SSH",
+            "port": 22,
+            "action": "failed_login",
+            "username": "admin",
+            "details": {
+                "reason": "invalid_user"
+            }
+        }
+    },
+    {
+        "filename": "3_failed_login_brute_force_2.json",
+        "content": {
+            "log_source": "auth_server_ssh_01",
+            "timestamp": "2025-06-27T22:50:10Z",
+            "event_description": "Failed password for user root from 203.0.113.10 port 50002 ssh2",
+            "source_ip": "203.0.113.10",
+            "destination_ip": "10.0.0.20",
+            "protocol": "SSH",
+            "port": 22,
+            "action": "failed_login",
+            "username": "root",
+            "details": {
+                "reason": "wrong_password"
+            }
+        }
+    },
+    {
+        "filename": "4_failed_login_brute_force_3.json",
+        "content": {
+            "log_source": "auth_server_ssh_01",
+            "timestamp": "2025-06-27T22:50:15Z",
+            "event_description": "Failed password for user user1 from 203.0.113.10 port 50003 ssh2",
+            "source_ip": "203.0.113.10",
+            "destination_ip": "10.0.0.20",
+            "protocol": "SSH",
+            "port": 22,
+            "action": "failed_login",
+            "username": "user1",
+            "details": {
+                "reason": "wrong_password"
+            }
+        }
+    },
+    {
+        "filename": "5_failed_login_brute_force_4.json",
+        "content": {
+            "log_source": "auth_server_ssh_01",
+            "timestamp": "2025-06-27T22:50:20Z",
+            "event_description": "Failed password for invalid user testuser from 203.0.113.10 port 50004 ssh2",
+            "source_ip": "203.0.113.10",
+            "destination_ip": "10.0.0.20",
+            "protocol": "SSH",
+            "port": 22,
+            "action": "failed_login",
+            "username": "testuser",
+            "details": {
+                "reason": "invalid_user"
+            }
+        }
+    },
+    {
+        "filename": "6_brute_force_triggered.json",
+        "content": {
+            "log_source": "auth_server_ssh_01",
+            "timestamp": "2025-06-27T22:50:25Z",
+            "event_description": "Failed password for user guest from 203.0.113.10 port 50005 ssh2",
+            "source_ip": "203.0.113.10",
+            "destination_ip": "10.0.0.20",
+            "protocol": "SSH",
+            "port": 22,
+            "action": "failed_login",
+            "username": "guest",
+            "details": {
+                "reason": "wrong_password"
+            }
+        }
+    },
+    {
+        "filename": "7_suspicious_ip_source.json",
+        "content": {
+            "log_source": "firewall_fw_01",
+            "timestamp": "2025-06-27T22:50:30Z",
+            "event_description": "DENY: Connection from known malicious IP attempt to internal server",
+            "source_ip": "1.2.3.4",
+            "destination_ip": "10.0.0.30",
+            "protocol": "TCP",
+            "port": 3389,
+            "action": "DENY",
+            "username": null,
+            "details": {
+                "rule_id": "BLOCK-MALICIOUS-IP",
+                "traffic_type": "RDP"
+            }
+        }
+    },
+    {
+        "filename": "8_malware_signature_event_desc.json",
+        "content": {
+            "log_source": "endpoint_security",
+            "timestamp": "2025-06-27T22:50:35Z",
+            "event_description": "File detected: C:\\temp\\downloader\\evil.exe attempts to connect to remote host",
+            "source_ip": "10.0.0.40",
+            "destination_ip": "1.1.1.1",
+            "protocol": "TCP",
+            "port": 443,
+            "action": "ALERT",
+            "username": "user_dev",
+            "details": {
+                "file_path": "C:\\temp\\downloader\\evil.exe",
+                "detection_engine": "AV_ENGINE_X"
+            }
+        }
+    },
+    {
+        "filename": "9_malware_signature_details.json",
+        "content": {
+            "log_source": "proxy_server_01",
+            "timestamp": "2025-06-27T22:50:40Z",
+            "event_description": "Proxy request: http://beacon.c2.com/payload.php blocked",
+            "source_ip": "10.0.0.50",
+            "destination_ip": "192.0.2.1",
+            "protocol": "HTTP",
+            "port": 80,
+            "action": "BLOCK",
+            "username": "user_marketing",
+            "details": {
+                "blocked_url": "http://beacon.c2.com/payload.php",
+                "reason": "Command & Control connection"
+            }
+        }
+    },
+    {
+        "filename": "10_normal_ssh_login.json",
+        "content": {
+            "log_source": "auth_server_ssh_01",
+            "timestamp": "2025-06-27T22:50:45Z",
+            "event_description": "Accepted password for user validuser from 192.168.1.5 port 60000 ssh2",
+            "source_ip": "192.168.1.5",
+            "destination_ip": "10.0.0.20",
+            "protocol": "SSH",
+            "port": 22,
+            "action": "accepted",
+            "username": "validuser",
+            "details": {
+                "ssh_version": "ssh2"
+            }
+        }
+    },
+    {
+        "filename": "11_port_scan_indicator.json",
+        "content": {
+            "log_source": "firewall_fw_02",
+            "timestamp": "2025-06-27T22:50:50Z",
+            "event_description": "Deny: Possible port scan from 203.0.113.20 to 10.0.0.35 on multiple ports (21, 23, 80, 443)",
+            "source_ip": "203.0.113.20",
+            "destination_ip": "10.0.0.35",
+            "protocol": "TCP",
+            "port": null,
+            "action": "DENY",
+            "username": null,
+            "details": {
+                "scan_type": "SYN_SCAN",
+                "ports_hit": [21, 23, 80, 443]
+            }
+        }
+    },
+    {
+        "filename": "12_normal_dns_query.json",
+        "content": {
+            "log_source": "dns_server_01",
+            "timestamp": "2025-06-27T22:50:55Z",
+            "event_description": "DNS query for www.google.com from 10.0.0.100",
+            "source_ip": "10.0.0.100",
+            "destination_ip": "8.8.4.4",
+            "protocol": "UDP",
+            "port": 53,
+            "action": "QUERY",
+            "username": null,
+            "details": {
+                "query_type": "A",
+                "domain": "www.google.com"
+            }
+        }
+    },
+    {
+        "filename": "13_failed_login_brute_force_7.json",
+        "content": {
+            "log_source": "auth_server_ssh_01",
+            "timestamp": "2025-06-27T22:51:00Z",
+            "event_description": "Failed password for invalid user user from 203.0.113.10 port 50006 ssh2",
+            "source_ip": "203.0.113.10",
+            "destination_ip": "10.0.0.20",
+            "protocol": "SSH",
+            "port": 22,
+            "action": "failed_login",
+            "username": "user",
+            "details": {
+                "reason": "invalid_user"
+            }
+        }
+    },
+    {
+        "filename": "14_suspicious_ip_destination.json",
+        "content": {
+            "log_source": "proxy_server_02",
+            "timestamp": "2025-06-27T22:51:05Z",
+            "event_description": "Connection to known malicious C2 IP detected",
+            "source_ip": "10.0.0.60",
+            "destination_ip": "1.2.3.4",
+            "protocol": "TCP",
+            "port": 8080,
+            "action": "ALERT",
+            "username": "internal_host_01",
+            "details": {
+                "alert_source": "ThreatIntelFeed"
+            }
+        }
+    },
+    {
+        "filename": "15_malware_signature_powershell.json",
+        "content": {
+            "log_source": "endpoint_powershell",
+            "timestamp": "2025-06-27T22:51:10Z",
+            "event_description": "Suspicious PowerShell command execution detected: powershell -encodedcommand SomeEncodedString",
+            "source_ip": "10.0.0.70",
+            "destination_ip": "1.1.1.1",
+            "protocol": "TCP",
+            "port": 53,
+            "action": "EXECUTE",
+            "username": "user_finance",
+            "details": {
+                "command_line": "powershell -encodedcommand SomeEncodedString",
+                "alert_reason": "Encoded command"
+            }
+        }
+    }
+]

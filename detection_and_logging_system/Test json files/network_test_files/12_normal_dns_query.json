@@ -1,0 +1,15 @@
+{
+    "log_source": "dns_server_01",
+    "timestamp": "2025-06-27T22:50:55Z",
+    "event_description": "DNS query for www.google.com from 10.0.0.100",
+    "source_ip": "10.0.0.100",
+    "destination_ip": "8.8.4.4",
+    "protocol": "UDP",
+    "port": 53,
+    "action": "QUERY",
+    "username": null,
+    "details": {
+        "query_type": "A",
+        "domain": "www.google.com"
+    }
+}
