@@ -16,7 +16,7 @@ class EmailDetectionInput(BaseModel):
 
 class SMSDetectionInput(BaseModel):
     source_type: str = "sms"
-    detection_id: str
+    detection_id: str = f"detection-{uuid.uuid4().hex[:8]}"
     timestamp: datetime
     sms_id: str
     sender_number: str
@@ -64,4 +64,3 @@ class RawNetworkLogInput(BaseModel):
     action: Optional[str] = None
     username: Optional[str] = None
     details: Optional[Dict[str, Any]] = None
-
