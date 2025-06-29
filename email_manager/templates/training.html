@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Training - Spam Classifier</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-envelope-open-text"></i> Email Spam Classifier
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">Dashboard</a>
+                <a class="nav-link" href="/upload">Data Upload</a>
+                <a class="nav-link active" href="/training">Training</a>
+                <a class="nav-link" href="/prediction">Prediction</a>
+                <a class="nav-link" href="/evaluation">Evaluation</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h2><i class="fas fa-brain"></i> Machine Learning Model Training</h2>
+                <p class="text-muted">Train and compare multiple machine learning algorithms</p>
+            </div>
+        </div>
+
+        {% if not dataset_loaded %}
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            Please load the dataset first from the <a href="/dashboard">Dashboard</a>.
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-cogs"></i> Training Configuration</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="trainingForm">
+                            <div class="mb-3">
+                                <label class="form-label">Select Models to Train</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="Naive Bayes" id="nb" checked>
+                                    <label class="form-check-label" for="nb">Naive Bayes</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="SVM" id="svm" checked>
+                                    <label class="form-check-label" for="svm">Support Vector Machine</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="Logistic Regression" id="lr" checked>
+                                    <label class="form-check-label" for="lr">Logistic Regression</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="Random Forest" id="rf">
+                                    <label class="form-check-label" for="rf">Random Forest</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="Gradient Boosting" id="gb">
+                                    <label class="form-check-label" for="gb">Gradient Boosting</label>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-lg w-100" {% if not dataset_loaded %}disabled{% endif %}>
+                                <i class="fas fa-play"></i> Start Training
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-info-circle"></i> Training Status</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="trainingStatus">
+                            {% if dataset_loaded %}
+                            <div class="alert alert-success">
+                                <i class="fas fa-check"></i> Dataset loaded and ready for training
+                            </div>
+                            {% else %}
+                            <div class="alert alert-warning">
+                                <i class="fas fa-exclamation-triangle"></i> Please load dataset first
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="progress mb-3" style="display: none;" id="trainingProgress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if models_trained %}
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5><i class="fas fa-check-circle text-success"></i> Training Complete</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-success">Models have been trained successfully!</p>
+                        <a href="/prediction" class="btn btn-success">Test Predictions</a>
+                        <a href="/evaluation" class="btn btn-info ms-2">View Results</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Training Results -->
+        <div class="row mt-4" id="resultsSection" style="display: none;">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-chart-bar"></i> Training Results</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive mb-4">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Model</th>
+                                        <th>Accuracy</th>
+                                        <th>Precision</th>
+                                        <th>Recall</th>
+                                        <th>F1 Score</th>
+                                        <th>CV Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resultsTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-8">
+                                <canvas id="performanceChart"></canvas>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6>Best Model</h6>
+                                    </div>
+                                    <div class="card-body" id="bestModelInfo">
+                                        <p class="text-muted">Training in progress...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Training Modal -->
+    <div class="modal fade" id="trainingModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="spinner-border text-primary mb-3" role="status">
+                        <span class="visually-hidden">Training...</span>
+                    </div>
+                    <h5>Training Machine Learning Models</h5>
+                    <p class="text-muted">This may take a few minutes...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('trainingForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Get selected models
+            const selectedModels = [];
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                selectedModels.push(cb.value);
+            });
+            
+            if (selectedModels.length === 0) {
+                showAlert('warning', 'Please select at least one model to train');
+                return;
+            }
+            
+            const modal = new bootstrap.Modal(document.getElementById('trainingModal'));
+            modal.show();
+            
+            updateTrainingStatus('Training models...', 'info');
+            
+            try {
+                const response = await fetch('/api/train-models', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(selectedModels)
+                });
+                
+                const data = await response.json();
+                modal.hide();
+                
+                if (data.success) {
+                    displayTrainingResults(data.results);
+                    updateTrainingStatus('Training completed successfully!', 'success');
+                    showAlert('success', data.message);
+                } else {
+                    updateTrainingStatus('Training failed', 'danger');
+                    showAlert('danger', 'Training failed');
+                }
+            } catch (error) {
+                modal.hide();
+                updateTrainingStatus('Error during training', 'danger');
+                showAlert('danger', 'Training error: ' + error.message);
+            }
+        });
+
+        function updateTrainingStatus(message, type) {
+            const container = document.getElementById('trainingStatus');
+            container.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+        }
+
+        function displayTrainingResults(results) {
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            // Populate results table
+            const tbody = document.getElementById('resultsTableBody');
+            tbody.innerHTML = '';
+            
+            let bestModel = { name: '', f1: 0 };
+            
+            Object.entries(results).forEach(([modelName, metrics]) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${modelName}</strong></td>
+                    <td>${(metrics.accuracy * 100).toFixed(1)}%</td>
+                    <td>${(metrics.precision * 100).toFixed(1)}%</td>
+                    <td>${(metrics.recall * 100).toFixed(1)}%</td>
+                    <td>${(metrics.f1_score * 100).toFixed(1)}%</td>
+                    <td>${(metrics.cv_mean * 100).toFixed(1)}%</td>
+                `;
+                tbody.appendChild(row);
+                
+                if (metrics.f1_score > bestModel.f1) {
+                    bestModel = { name: modelName, f1: metrics.f1_score };
+                }
+            });
+            
+            // Update best model display
+            document.getElementById('bestModelInfo').innerHTML = `
+                <h6 class="text-success">${bestModel.name}</h6>
+                <p>F1 Score: ${(bestModel.f1 * 100).toFixed(1)}%</p>
+                <small class="text-muted">Best performing model</small>
+            `;
+            
+            // Create performance chart
+            createPerformanceChart(results);
+            
+            // Scroll to results
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function createPerformanceChart(results) {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            
+            const modelNames = Object.keys(results);
+            const metrics = ['accuracy', 'precision', 'recall', 'f1_score'];
+            const colors = ['#007bff', '#28a745', '#ffc107', '#dc3545'];
+            
+            const datasets = metrics.map((metric, index) => ({
+                label: metric.replace('_', ' ').toUpperCase(),
+                data: modelNames.map(name => results[name][metric] * 100),
+                backgroundColor: colors[index],
+                borderColor: colors[index],
+                borderWidth: 1
+            }));
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: modelNames,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Model Performance Comparison'
+                        },
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function showAlert(type, message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
