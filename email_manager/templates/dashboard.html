@@ -1,0 +1,281 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - ZAMREN Cybersecurity{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">
+            <i class="fas fa-shield-alt text-primary"></i> 
+            ZAMREN Cybersecurity Email Manager
+        </h1>
+        <p class="lead">Real-time Email Threat Detection & Analysis System</p>
+    </div>
+</div>
+
+<!-- System Status Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">System Status</h5>
+                        <h3 id="system-status-text">ACTIVE</h3>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-power-off fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-danger text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Threats Detected</h5>
+                        <h3 id="threat-count">{{ threat_count }}</h3>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Risk Level</h5>
+                        <h3 id="risk-level">{{ risk_level }}</h3>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-chart-line fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">ML Models</h5>
+                        <h3>5 Active</h3>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-brain fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-bolt"></i> Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <a href="/analysis" class="btn btn-primary btn-lg w-100 mb-2">
+                            <i class="fas fa-search"></i><br>
+                            Analyze Email
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-success btn-lg w-100 mb-2" onclick="loadDataset()">
+                            <i class="fas fa-database"></i><br>
+                            Load Dataset
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="/training" class="btn btn-warning btn-lg w-100 mb-2">
+                            <i class="fas fa-brain"></i><br>
+                            Train Models
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="/analytics" class="btn btn-info btn-lg w-100 mb-2">
+                            <i class="fas fa-chart-bar"></i><br>
+                            View Analytics
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Threat Dashboard -->
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-shield-alt"></i> Recent Threat Activity</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="threatChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-list"></i> Latest Threats</h5>
+            </div>
+            <div class="card-body" id="recent-threats">
+                <p class="text-muted">No threats detected yet.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Modal -->
+<div class="modal fade" id="loadingModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Loading dataset...</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Initialize dashboard
+document.addEventListener('DOMContentLoaded', function() {
+    updateDashboardStats();
+    setInterval(updateDashboardStats, 30000); // Update every 30 seconds
+});
+
+async function updateDashboardStats() {
+    try {
+        const response = await fetch('/api/dashboard-stats');
+        const data = await response.json();
+        
+        document.getElementById('threat-count').textContent = data.total_threats;
+        document.getElementById('risk-level').textContent = data.risk_level;
+        
+        updateRecentThreats(data.recent_activity);
+        updateThreatChart(data);
+    } catch (error) {
+        console.error('Error updating dashboard:', error);
+    }
+}
+
+function updateRecentThreats(threats) {
+    const container = document.getElementById('recent-threats');
+    
+    if (threats.length === 0) {
+        container.innerHTML = '<p class="text-muted">No threats detected yet.</p>';
+        return;
+    }
+    
+    container.innerHTML = threats.map(threat => `
+        <div class="alert alert-${getThreatColor(threat.threat_level)} alert-sm mb-2">
+            <small>
+                <strong>${threat.threat_level}</strong> - ${threat.classification}<br>
+                <span class="text-muted">${new Date(threat.timestamp).toLocaleString()}</span>
+            </small>
+        </div>
+    `).join('');
+}
+
+function getThreatColor(level) {
+    switch(level) {
+        case 'CRITICAL': return 'danger';
+        case 'HIGH': return 'warning';
+        case 'MEDIUM': return 'info';
+        default: return 'success';
+    }
+}
+
+let threatChart;
+
+function updateThreatChart(data) {
+    const ctx = document.getElementById('threatChart').getContext('2d');
+    
+    if (threatChart) {
+        threatChart.destroy();
+    }
+    
+    threatChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Critical', 'High', 'Medium', 'Low'],
+            datasets: [{
+                data: [
+                    data.critical_threats || 0,
+                    data.high_threats || 0,
+                    (data.total_threats || 0) - (data.critical_threats || 0) - (data.high_threats || 0),
+                    0
+                ],
+                backgroundColor: ['#dc3545', '#fd7e14', '#ffc107', '#28a745']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+}
+
+async function loadDataset() {
+    const modal = new bootstrap.Modal(document.getElementById('loadingModal'));
+    modal.show();
+    
+    try {
+        const response = await fetch('/api/load-dataset', {
+            method: 'POST'
+        });
+        const data = await response.json();
+        
+        modal.hide();
+        
+        if (data.success) {
+            showAlert('success', data.message);
+            updateDashboardStats();
+        } else {
+            showAlert('danger', 'Failed to load dataset');
+        }
+    } catch (error) {
+        modal.hide();
+        showAlert('danger', 'Error loading dataset: ' + error.message);
+    }
+}
+
+function showAlert(type, message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.querySelector('main').insertBefore(alertDiv, document.querySelector('main').firstChild);
+    
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 5000);
+}
+</script>
+{% endblock %}

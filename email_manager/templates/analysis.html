@@ -1,0 +1,420 @@
+{% extends "base.html" %}
+
+{% block title %}Email Analysis - ZAMREN Cybersecurity{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2><i class="fas fa-search"></i> Live Email Threat Analysis</h2>
+        <p class="text-muted">Analyze emails for cybersecurity threats and phishing attempts</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-envelope"></i> Email Input</h5>
+            </div>
+            <div class="card-body">
+                <form id="emailAnalysisForm">
+                    <div class="mb-3">
+                        <label for="senderEmail" class="form-label">Sender Email</label>
+                        <input type="email" class="form-control" id="senderEmail" placeholder="suspicious@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="subjectLine" class="form-label">Subject Line</label>
+                        <input type="text" class="form-control" id="subjectLine" placeholder="Urgent: Verify Your Account">
+                    </div>
+                    <div class="mb-3">
+                        <label for="emailContent" class="form-label">Email Content</label>
+                        <textarea class="form-control" id="emailContent" rows="8" placeholder="Enter the full email content here..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-search"></i> Analyze Email for Threats
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-flask"></i> Quick Test Examples</h5>
+            </div>
+            <div class="card-body">
+                <button class="btn btn-danger btn-sm w-100 mb-2" onclick="loadExample('phishing')">
+                    <i class="fas fa-fish"></i> Phishing Example
+                </button>
+                <button class="btn btn-warning btn-sm w-100 mb-2" onclick="loadExample('financial')">
+                    <i class="fas fa-dollar-sign"></i> Financial Scam
+                </button>
+                <button class="btn btn-success btn-sm w-100 mb-2" onclick="loadExample('legitimate')">
+                    <i class="fas fa-check"></i> Legitimate Email
+                </button>
+                <button class="btn btn-info btn-sm w-100 mb-2" onclick="loadExample('urgent')">
+                    <i class="fas fa-exclamation"></i> Urgency Scam
+                </button>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle"></i> Analysis Info</h5>
+            </div>
+            <div class="card-body">
+                <small class="text-muted">
+                    The system analyzes:
+                    <ul>
+                        <li>Phishing indicators</li>
+                        <li>Suspicious URLs</li>
+                        <li>Sender authenticity</li>
+                        <li>Financial content risks</li>
+                        <li>Urgency patterns</li>
+                        <li>Content anomalies</li>
+                    </ul>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analysis Results -->
+<div class="row mt-4" id="resultsSection" style="display: none;">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-clipboard-list"></i> Cybersecurity Analysis Results</h5>
+            </div>
+            <div class="card-body">
+                <!-- Main Results -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card" id="classificationCard">
+                            <div class="card-body text-center">
+                                <h5>Classification</h5>
+                                <h3 id="classificationResult">-</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card" id="threatLevelCard">
+                            <div class="card-body text-center">
+                                <h5>Threat Level</h5>
+                                <h3 id="threatLevelResult">-</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h5>Risk Score</h5>
+                                <h3 id="riskScoreResult">-/100</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Detailed Analysis Tabs -->
+                <ul class="nav nav-tabs" id="analysisTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="phishing-tab" data-bs-toggle="tab" data-bs-target="#phishing" type="button">
+                            <i class="fas fa-fish"></i> Phishing
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="urls-tab" data-bs-toggle="tab" data-bs-target="#urls" type="button">
+                            <i class="fas fa-link"></i> URLs
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="sender-tab" data-bs-toggle="tab" data-bs-target="#sender" type="button">
+                            <i class="fas fa-user"></i> Sender
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="financial-tab" data-bs-toggle="tab" data-bs-target="#financial" type="button">
+                            <i class="fas fa-dollar-sign"></i> Financial
+                        </button>
+                    </li>
+                </ul>
+                
+                <div class="tab-content" id="analysisTabContent">
+                    <div class="tab-pane fade show active" id="phishing" role="tabpanel">
+                        <div class="p-3" id="phishingDetails"></div>
+                    </div>
+                    <div class="tab-pane fade" id="urls" role="tabpanel">
+                        <div class="p-3" id="urlDetails"></div>
+                    </div>
+                    <div class="tab-pane fade" id="sender" role="tabpanel">
+                        <div class="p-3" id="senderDetails"></div>
+                    </div>
+                    <div class="tab-pane fade" id="financial" role="tabpanel">
+                        <div class="p-3" id="financialDetails"></div>
+                    </div>
+                </div>
+                
+                <!-- Recommendations -->
+                <div class="mt-4">
+                    <h5><i class="fas fa-shield-alt"></i> Security Recommendations</h5>
+                    <div id="recommendationsContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Modal -->
+<div class="modal fade" id="analysisModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Analyzing...</span>
+                </div>
+                <p class="mt-2">Analyzing email for cybersecurity threats...</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const examples = {
+    phishing: {
+        sender: 'security@paypal-verification.com',
+        subject: 'URGENT: Your PayPal account has been suspended',
+        content: 'Your PayPal account has been suspended due to suspicious activity. Click here to verify your account immediately: http://paypal-security.net/verify. You have 24 hours to verify or your account will be permanently closed.'
+    },
+    financial: {
+        sender: 'winner@lottery-official.com',
+        subject: 'Congratulations! You won $1,000,000',
+        content: 'You have won the international lottery! To claim your prize of $1,000,000, please provide your bank account details and social security number immediately.'
+    },
+    legitimate: {
+        sender: 'team@company.com',
+        subject: 'Meeting reminder for tomorrow',
+        content: 'Hi, just a reminder about our team meeting tomorrow at 2 PM in conference room A. Please bring your project updates.'
+    },
+    urgent: {
+        sender: 'billing@bank-alert.com',
+        subject: 'FINAL NOTICE: Account will be closed in 24 hours',
+        content: 'URGENT ACTION REQUIRED! Your bank account will be permanently closed in 24 hours unless you verify your information immediately. Click here now: http://bank-verify.net'
+    }
+};
+
+function loadExample(type) {
+    const example = examples[type];
+    document.getElementById('senderEmail').value = example.sender;
+    document.getElementById('subjectLine').value = example.subject;
+    document.getElementById('emailContent').value = example.content;
+}
+
+document.getElementById('emailAnalysisForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const senderEmail = document.getElementById('senderEmail').value;
+    const subjectLine = document.getElementById('subjectLine').value;
+    const emailContent = document.getElementById('emailContent').value;
+    
+    if (!emailContent.trim()) {
+        showAlert('danger', 'Please enter email content to analyze');
+        return;
+    }
+    
+    const modal = new bootstrap.Modal(document.getElementById('analysisModal'));
+    modal.show();
+    
+    try {
+        const response = await fetch('/api/analyze-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email_content: emailContent,
+                sender_email: senderEmail,
+                subject: subjectLine
+            })
+        });
+        
+        const data = await response.json();
+        modal.hide();
+        
+        if (data.success) {
+            displayAnalysisResults(data.analysis);
+        } else {
+            showAlert('danger', 'Analysis failed');
+        }
+    } catch (error) {
+        modal.hide();
+        showAlert('danger', 'Error analyzing email: ' + error.message);
+    }
+});
+
+function displayAnalysisResults(analysis) {
+    // Show results section
+    document.getElementById('resultsSection').style.display = 'block';
+    
+    // Update main results
+    const classification = analysis.classification;
+    const threatLevel = analysis.threat_level;
+    const riskScore = analysis.risk_score;
+    
+    document.getElementById('classificationResult').textContent = classification;
+    document.getElementById('threatLevelResult').textContent = threatLevel;
+    document.getElementById('riskScoreResult').textContent = riskScore + '/100';
+    
+    // Update card colors
+    const classCard = document.getElementById('classificationCard');
+    const threatCard = document.getElementById('threatLevelCard');
+    
+    classCard.className = 'card ' + getClassificationColor(classification);
+    threatCard.className = 'card ' + getThreatLevelColor(threatLevel);
+    
+    // Update detailed analysis
+    updatePhishingDetails(analysis.threat_indicators.phishing_score);
+    updateUrlDetails(analysis.threat_indicators.url_analysis);
+    updateSenderDetails(analysis.threat_indicators.sender_analysis);
+    updateFinancialDetails(analysis.threat_indicators.financial_risk);
+    
+    // Update recommendations
+    updateRecommendations(analysis.recommendations);
+    
+    // Scroll to results
+    document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+function getClassificationColor(classification) {
+    if (classification.includes('SPAM') || classification.includes('PHISHING')) {
+        return 'bg-danger text-white';
+    } else if (classification === 'SUSPICIOUS') {
+        return 'bg-warning text-dark';
+    } else {
+        return 'bg-success text-white';
+    }
+}
+
+function getThreatLevelColor(level) {
+    switch(level) {
+        case 'CRITICAL': return 'bg-danger text-white';
+        case 'HIGH': return 'bg-warning text-dark';
+        case 'MEDIUM': return 'bg-info text-white';
+        default: return 'bg-success text-white';
+    }
+}
+
+function updatePhishingDetails(phishing) {
+    const container = document.getElementById('phishingDetails');
+    let html = `<p><strong>Phishing Score:</strong> ${phishing.score}</p>`;
+    
+    if (phishing.suspicious_keywords_found.length > 0) {
+        html += '<p><strong>Suspicious Keywords Found:</strong></p><ul>';
+        phishing.suspicious_keywords_found.forEach(keyword => {
+            html += `<li><code>${keyword}</code></li>`;
+        });
+        html += '</ul>';
+    }
+    
+    if (phishing.urgency_patterns_found.length > 0) {
+        html += '<p><strong>Urgency Patterns Detected:</strong></p><ul>';
+        phishing.urgency_patterns_found.forEach(pattern => {
+            html += `<li><code>${pattern}</code></li>`;
+        });
+        html += '</ul>';
+    }
+    
+    container.innerHTML = html;
+}
+
+function updateUrlDetails(urlAnalysis) {
+    const container = document.getElementById('urlDetails');
+    let html = `<p><strong>URL Risk Score:</strong> ${urlAnalysis.score}</p>`;
+    
+    if (urlAnalysis.urls_found.length > 0) {
+        html += '<p><strong>URLs Found:</strong></p>';
+        urlAnalysis.urls_found.forEach(url => {
+            html += `<div class="mb-2"><code>${url}</code></div>`;
+        });
+    }
+    
+    if (urlAnalysis.suspicious_urls.length > 0) {
+        html += '<div class="alert alert-danger"><strong>Suspicious URLs Detected:</strong>';
+        urlAnalysis.suspicious_urls.forEach(url => {
+            html += `<div><code>${url}</code></div>`;
+        });
+        html += '</div>';
+    }
+    
+    container.innerHTML = html;
+}
+
+function updateSenderDetails(senderAnalysis) {
+    const container = document.getElementById('senderDetails');
+    let html = `<p><strong>Sender Risk Score:</strong> ${senderAnalysis.score}</p>`;
+    
+    if (senderAnalysis.suspicious_patterns.length > 0) {
+        html += '<p><strong>Suspicious Sender Patterns:</strong></p><ul>';
+        senderAnalysis.suspicious_patterns.forEach(pattern => {
+            html += `<li>${pattern}</li>`;
+        });
+        html += '</ul>';
+    }
+    
+    container.innerHTML = html;
+}
+
+function updateFinancialDetails(financial) {
+    const container = document.getElementById('financialDetails');
+    let html = `<p><strong>Financial Risk Score:</strong> ${financial.score}</p>`;
+    
+    if (financial.financial_keywords_found.length > 0) {
+        html += '<div class="alert alert-danger"><strong>Financial Information Requests Detected:</strong><ul>';
+        financial.financial_keywords_found.forEach(keyword => {
+            html += `<li>${keyword}</li>`;
+        });
+        html += '</ul></div>';
+    }
+    
+    if (financial.requests_credentials) {
+        html += '<div class="alert alert-danger"><strong>⚠️ This email requests sensitive credentials!</strong></div>';
+    }
+    
+    container.innerHTML = html;
+}
+
+function updateRecommendations(recommendations) {
+    const container = document.getElementById('recommendationsContent');
+    
+    if (recommendations.length === 0) {
+        container.innerHTML = '<p class="text-muted">No specific recommendations.</p>';
+        return;
+    }
+    
+    let html = '<ol>';
+    recommendations.forEach(rec => {
+        html += `<li class="mb-2">${rec}</li>`;
+    });
+    html += '</ol>';
+    
+    container.innerHTML = html;
+}
+
+function showAlert(type, message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.querySelector('main').insertBefore(alertDiv, document.querySelector('main').firstChild);
+    
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 5000);
+}
+</script>
+{% endblock %}
