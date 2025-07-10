@@ -43,3 +43,21 @@ CREATE TABLE network_event_log (
 -- Index on the primary key (automatically created by most DBMSs)
 -- Explicit index for optimized search if needed
 CREATE INDEX idx_network_event_log_id ON network_event_log(id);
+
+-- Drop the existing raw_sms_log table if it exists
+DROP TABLE IF EXISTS raw_sms_log;
+
+-- Create the 'raw_sms_log' table with sms_id as the primary key
+CREATE TABLE raw_sms_log (
+    sms_id VARCHAR(36) PRIMARY KEY, -- Using VARCHAR(36) for UUID.hex
+    sender_number VARCHAR(50) NOT NULL,
+    message_content TEXT NOT NULL,
+    timestamp DATETIME NOT NULL,
+    detection_status VARCHAR(50) NOT NULL DEFAULT 'undetermined',
+    details JSON
+);
+
+-- Optional: Add indexes for faster queries
+CREATE INDEX idx_raw_sms_log_sender ON raw_sms_log (sender_number);
+CREATE INDEX idx_raw_sms_log_timestamp ON raw_sms_log (timestamp DESC);
+CREATE INDEX idx_raw_sms_log_detection_status ON raw_sms_log (detection_status);
