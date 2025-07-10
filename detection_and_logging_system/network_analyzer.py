@@ -1,6 +1,6 @@
 import uuid
 from sqlalchemy.orm import Session
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from sqlalchemy import func
 import schemas, actions, models
 from typing import Optional, Dict, Any
@@ -11,18 +11,38 @@ BRUTE_FORCE_THRESHOLD = 5
 SUSPICIOUS_IPS = {
     "1.2.3.4",
     "203.0.113.10",
-    "8.8.8.8"
+    "8.8.8.8",
+    "192.0.2.1",
+    "198.51.100.25",
+    "203.0.113.50",
+    "10.0.0.10",
+    "172.16.0.1",
+    "192.168.0.100",
+    "100.64.0.1",
+    "169.254.0.5", 
+    "192.88.99.1", 
+    "198.18.0.1",
+    "224.0.0.1", 
 }
 
 MALWARE_SIGNATURES = [
     "evil.exe",
     "powershell -encodedcommand",
-    "nc -lvp",
-    "rm -rf /",
-    "beacon.c2.com",
-    "trojan.downloader"
+    "nc -lvp", 
+    "rm -rf /", 
+    "beacon.c2.com", 
+    "trojan.downloader", 
+    "mimikatz",
+    "psexec.exe", 
+    "rundll32.exe", 
+    "mshta.exe", 
+    "certutil -urlcache -f",
+    "bitsadmin /transfer",
+    "wscript.exe", 
+    "macro_enabled.docm",
+    "shell.php",
+    "base64 --decode"
 ]
-
 
 def detect_suspicious_ip(raw_log_input: schemas.RawNetworkLogInput) -> Optional[str]:
     if raw_log_input.source_ip and raw_log_input.source_ip in SUSPICIOUS_IPS:
@@ -42,14 +62,14 @@ def detect_malware_signature(raw_log_input: schemas.RawNetworkLogInput) -> Optio
     return None
 
 def detect_brute_force_db(raw_log_input: schemas.RawNetworkLogInput, db: Session) -> Optional[str]:
-    if raw_log_input.action != "failed_login" or not raw_log_input.source_ip:
+    if raw_log_input.action != "LOGIN_DENIED" or not raw_log_input.source_ip:
         return None
 
-    time_window_start = datetime.now() - timedelta(minutes=BRUTE_FORCE_TIME_WINDOW_MINUTES)
+    time_window_start = datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(minutes=BRUTE_FORCE_TIME_WINDOW_MINUTES)
 
     query = db.query(models.NetworkEventLog).filter(
         models.NetworkEventLog.source_ip == raw_log_input.source_ip,
-        models.NetworkEventLog.action == "failed_login",
+        models.NetworkEventLog.action == "LOGIN_DENIED",
         models.NetworkEventLog.timestamp >= time_window_start
     )
 

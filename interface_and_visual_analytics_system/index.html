@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <link rel="stylesheet" href="stylesheets/index.css">
+    </head>
+    <body>
+        <nav>
+            <a href="#Dashboard">Dashboard</a>
+            <a href="#Email">Email manager</a>
+            <a href="#Sms">SMS Manager</a>
+            <a href="#Settings">Settings</a>
+        </nav>
+        <main>
+            <div class="detection-summary">
+                <div class="ids-summary">
+                    <h2>Network monitoring</h2>
+                    <div class="ids-summary-content">
+                        <div class="detected-threats" id="recentNetworkThreatsContainer">
+                            <div class="table-container"></div>
+                        </div>
+                        <div class="breakdown">
+                            <div class="suspicious-ip" id="suspiciousIpCount"></div>
+                            <div class="brute-force-attempts" id="bruteForceCount"></div>
+                            <div class="malware-detections" id="malwareCount"></div>
+                            <div class="pending-alerts" id="pendingAlertsCount"></div>
+                            <div class="total-alerts" id="totalNetworkAlertsCount"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="email-detection-summary">
+                    <h2>Email traffic</h2>
+                    <div class="email-detection-summary-content">
+                        <div class="emails-recieved" id="recentEmailLogsContainer">
+                            <div class="table-container"></div>
+                        </div>
+                        <div class="emails-threats-breakdown">
+                            <div class="spam-emails" id="spamEmailsCount"></div>
+                            <div class="total-emails" id="totalEmailsCount"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sms-detection-summary">
+                    <h2>SMS traffic</h2>
+                    <div class="sms-detection-summary-content">
+                        <div class="sms-recieved" id="recentSmsLogsContainer">
+                            <div class="table-container"></div>
+                        </div>
+                        <div class="sms-threats-breakdown">
+                            <div class="spam-sms" id="spamSmsCount"></div>
+                            <div class="total-sms" id="totalSmsCount"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="security-insights">
+                <h2>Security insights</h2>
+            </div>
+        </main>
+        <script src="scripts/dashboard.js"></script>
+    </body>
+</html>

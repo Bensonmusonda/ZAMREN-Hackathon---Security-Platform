@@ -1,0 +1,182 @@
+body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: 1fr;
+}
+
+nav {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #e8e8e8;
+    padding: 20px 10px; /* Add some vertical padding, less horizontal */
+    box-sizing: border-box; /* Ensures padding is included in the 100% height */
+    align-items: flex-start; /* Aligns nav items to the start (left) */
+    gap: 15px; /* Space between nav links */
+    border-right: 1px solid #ccc; /* Subtle separator from main content */
+}
+
+nav a {
+    text-decoration: none; /* Remove underline */
+    color: #333; /* Darker text color */
+    font-size: 1.1em; /* Slightly larger font size */
+    padding: 8px 12px; /* Padding inside the link for clickability */
+    border-radius: 5px; /* Slightly rounded corners */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for hover effects */
+    width: 100%; /* Make links fill the available width in the nav */
+    box-sizing: border-box; /* Ensures padding is included in the width */
+}
+
+nav a:hover {
+    background-color: #d0d0d0; /* Lighter background on hover */
+    color: #000; /* Darker text on hover */
+}
+
+nav a:active,
+nav a.active-link { /* You can add an 'active-link' class via JS for the current page */
+    background-color: #c0c0c0; /* Slightly darker active background */
+    color: #000;
+    font-weight: bold; /* Make active link bold */
+}
+
+main {
+    padding: 10px;
+    box-sizing: border-box;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 1fr; /* Main has one row, takes full height of its grid cell */
+    grid-template-columns: 2fr 1fr; /* Main content split: detection summary (left) and security insights (right) */
+    gap: 20px;
+}
+
+.detection-summary {
+    display: grid;
+    /* We're splitting the vertical space within the left 'main' column.
+       Let's use specific pixel values or more refined fractions if needed,
+       but for now, relative sizes will distribute available height. */
+    grid-template-rows: 3fr 2fr; /* IDS summary will take 3/5 of vertical space, email/sms 2/5 */
+    grid-template-columns: repeat(2, 1fr); /* Email and SMS will share the bottom row */
+    gap: 20px;
+}
+
+/* Common styling for all direct children of .detection-summary */
+.detection-summary > div {
+    background: #e8e8e8;
+    padding: 10px;
+    border-radius: 7px;
+    display: flex; /* Arrange h2 and content vertically */
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.ids-summary {
+    grid-column: 1 / span 2; /* IDS summary spans both columns in the top row */
+}
+
+.ids-summary-content {
+    flex: 1; /* This makes ids-summary-content fill the remaining space below the h2 */
+    display: flex;
+    flex-direction: column; /* Arrange table and breakdown vertically */
+    gap: 10px; /* Space between table and breakdown */
+    /* NO min-height: 0 here if we want the children to define overall size */
+}
+
+.detected-threats {
+    background: #fff;
+    padding: 10px;
+    border-radius: 7px;
+    box-sizing: border-box;
+    /* --- THE CRITICAL CHANGE FOR RIGIDITY --- */
+    /* Set a fixed height in pixels. This will determine the exact visual size.
+       You'll need to fine-tune this value for 1920x1080.
+       Let's estimate a reasonable pixel height based on typical screen usage. */
+    height: 180px; /* Example fixed height. ADJUST THIS VALUE as needed. */
+    overflow-y: auto; /* Enable scrolling if content exceeds this height */
+    /* The space below was caused by flex: 1 combined with content not filling it.
+       By setting a fixed height, it will always be this size. */
+}
+
+.breakdown {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    /* This element will simply take its intrinsic height */
+}
+
+.breakdown > div {
+    aspect-ratio: 1 / 1;
+    background: #fff;
+    border-radius: 7px;
+    flex: 1; /* Items within breakdown still share space horizontally */
+}
+
+/* --- Email and SMS Sections (adjusted for consistency) --- */
+.email-detection-summary-content,
+.sms-detection-summary-content {
+    flex: 1; /* Fill remaining vertical space in parent flex column */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.emails-recieved,
+.sms-recieved {
+    background: #fff;
+    padding: 10px;
+    border-radius: 7px;
+    box-sizing: border-box;
+    /* --- THE CRITICAL CHANGE FOR RIGIDITY --- */
+    /* Set a fixed height in pixels. ADJUST THIS VALUE as needed. */
+    height: 180px; /* Example fixed height. ADJUST THIS VALUE as needed. */
+    overflow-y: auto; /* Enable scrolling if content exceeds this height */
+}
+
+.emails-threats-breakdown,
+.sms-threats-breakdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.emails-threats-breakdown > div,
+.sms-threats-breakdown > div {
+    height: 100%; /* Fill their grid cell */
+    background: #fff;
+    border-radius: 7px;
+}
+
+#security-insights { /* Using ID selector as per your HTML */
+    background: #e8e8e8;
+    border-radius: 7px;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex; /* Arrange h2 and table-container vertically */
+    flex-direction: column;
+}
+
+
+/* Common table styles (kept as before) */
+.table-container table {
+    margin: 0;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-container th,
+.table-container td {
+    padding: 8px;
+    box-sizing: border-box;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.table-container th {
+    background-color: #f2f2f2;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
