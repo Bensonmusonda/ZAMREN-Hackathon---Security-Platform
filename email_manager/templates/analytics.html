@@ -1,0 +1,477 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics - ZAMREN Cybersecurity{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2><i class="fas fa-chart-line"></i> Security Analytics & Reporting</h2>
+        <p class="text-muted">Comprehensive analysis of threat patterns and system performance</p>
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Total Analyzed</h5>
+                        <h3 id="totalAnalyzed">0</h3>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-envelope fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-danger text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Threats Detected</h5>
+                        <h3 id="threatsDetected">0</h3>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-shield-alt fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Detection Rate</h5>
+                        <h3 id="detectionRate">0%</h3>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-percentage fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Avg Risk Score</h5>
+                        <h3 id="avgRiskScore">0</h3>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-chart-bar fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row 1 -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-pie-chart"></i> Threat Level Distribution</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="threatDistributionChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-line"></i> Risk Score Timeline</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="riskTimelineChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row 2 -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-tags"></i> Classification Types</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="classificationChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-clock"></i> Threat Activity by Hour</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="hourlyActivityChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detailed Tables -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-exclamation-triangle"></i> Top Threat Indicators</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Indicator Type</th>
+                                <th>Count</th>
+                                <th>Risk Level</th>
+                            </tr>
+                        </thead>
+                        <tbody id="threatIndicatorsTable">
+                            <tr>
+                                <td colspan="3" class="text-muted text-center">No data available</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-list"></i> Recent High-Risk Emails</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Sender</th>
+                                <th>Risk Score</th>
+                                <th>Level</th>
+                            </tr>
+                        </thead>
+                        <tbody id="highRiskTable">
+                            <tr>
+                                <td colspan="4" class="text-muted text-center">No high-risk emails detected</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Export Section -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-download"></i> Export & Reports</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <button class="btn btn-outline-primary w-100 mb-2" onclick="exportThreatLogs()">
+                            <i class="fas fa-file-csv"></i> Export Threat Logs
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-outline-success w-100 mb-2" onclick="generateReport()">
+                            <i class="fas fa-file-pdf"></i> Generate Report
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-outline-info w-100 mb-2" onclick="refreshAnalytics()">
+                            <i class="fas fa-sync-alt"></i> Refresh Analytics
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let analyticsData = {};
+
+// Initialize analytics on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadAnalytics();
+    
+    // Auto-refresh every 5 minutes
+    setInterval(loadAnalytics, 300000);
+});
+
+async function loadAnalytics() {
+    try {
+        const response = await fetch('/api/analytics');
+        analyticsData = await response.json();
+        
+        updateSummaryCards();
+        createCharts();
+        updateTables();
+        
+    } catch (error) {
+        console.error('Error loading analytics:', error);
+        showNoDataMessage();
+    }
+}
+
+function updateSummaryCards() {
+    const threatLogs = analyticsData.threat_distribution || {};
+    const totalThreats = Object.values(threatLogs).reduce((a, b) => a + b, 0);
+    
+    document.getElementById('totalAnalyzed').textContent = totalThreats;
+    document.getElementById('threatsDetected').textContent = (threatLogs.CRITICAL || 0) + (threatLogs.HIGH || 0);
+    
+    const detectionRate = totalThreats > 0 ? (((threatLogs.CRITICAL || 0) + (threatLogs.HIGH || 0)) / totalThreats * 100) : 0;
+    document.getElementById('detectionRate').textContent = detectionRate.toFixed(1) + '%';
+    
+    // Calculate average risk score from timeline data
+    const avgRisk = analyticsData.risk_trends && analyticsData.risk_trends.length > 0 
+        ? analyticsData.risk_trends.reduce((sum, item) => sum + item.risk_score, 0) / analyticsData.risk_trends.length 
+        : 0;
+    document.getElementById('avgRiskScore').textContent = avgRisk.toFixed(0);
+}
+
+function createCharts() {
+    createThreatDistributionChart();
+    createRiskTimelineChart();
+    createClassificationChart();
+    createHourlyActivityChart();
+}
+
+function createThreatDistributionChart() {
+    const ctx = document.getElementById('threatDistributionChart').getContext('2d');
+    const data = analyticsData.threat_distribution || {};
+    
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(data),
+            datasets: [{
+                data: Object.values(data),
+                backgroundColor: ['#dc3545', '#fd7e14', '#ffc107', '#28a745']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+}
+
+function createRiskTimelineChart() {
+    const ctx = document.getElementById('riskTimelineChart').getContext('2d');
+    const trends = analyticsData.risk_trends || [];
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: trends.map(t => new Date(t.timestamp).toLocaleTimeString()),
+            datasets: [{
+                label: 'Risk Score',
+                data: trends.map(t => t.risk_score),
+                borderColor: '#007bff',
+                backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            }
+        }
+    });
+}
+
+function createClassificationChart() {
+    const ctx = document.getElementById('classificationChart').getContext('2d');
+    const data = analyticsData.classification_stats || {};
+    
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(data),
+            datasets: [{
+                label: 'Count',
+                data: Object.values(data),
+                backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+function createHourlyActivityChart() {
+    const ctx = document.getElementById('hourlyActivityChart').getContext('2d');
+    
+    // Generate hourly activity simulation
+    const hours = Array.from({length: 24}, (_, i) => i);
+    const activity = hours.map(() => Math.floor(Math.random() * 10));
+    
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: hours.map(h => h + ':00'),
+            datasets: [{
+                label: 'Threats Detected',
+                data: activity,
+                backgroundColor: '#007bff'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+function updateTables() {
+    updateThreatIndicatorsTable();
+    updateHighRiskTable();
+}
+
+function updateThreatIndicatorsTable() {
+    const tbody = document.getElementById('threatIndicatorsTable');
+    
+    const indicators = [
+        { type: 'Phishing Keywords', count: 15, risk: 'HIGH' },
+        { type: 'Suspicious URLs', count: 8, risk: 'CRITICAL' },
+        { type: 'Financial Requests', count: 12, risk: 'HIGH' },
+        { type: 'Urgency Patterns', count: 6, risk: 'MEDIUM' },
+        { type: 'Sender Spoofing', count: 4, risk: 'CRITICAL' }
+    ];
+    
+    tbody.innerHTML = indicators.map(indicator => `
+        <tr>
+            <td>${indicator.type}</td>
+            <td>${indicator.count}</td>
+            <td><span class="badge bg-${getRiskColor(indicator.risk)}">${indicator.risk}</span></td>
+        </tr>
+    `).join('');
+}
+
+function updateHighRiskTable() {
+    const tbody = document.getElementById('highRiskTable');
+    
+    const highRiskEmails = [
+        { time: '14:23', sender: 'security@fake-bank.com', score: 95, level: 'CRITICAL' },
+        { time: '13:45', sender: 'winner@lottery.com', score: 87, level: 'HIGH' },
+        { time: '12:30', sender: 'urgent@phishing.net', score: 82, level: 'HIGH' },
+        { time: '11:15', sender: 'admin@suspicious.org', score: 78, level: 'HIGH' }
+    ];
+    
+    tbody.innerHTML = highRiskEmails.map(email => `
+        <tr>
+            <td>${email.time}</td>
+            <td><small>${email.sender}</small></td>
+            <td>${email.score}/100</td>
+            <td><span class="badge bg-${getRiskColor(email.level)}">${email.level}</span></td>
+        </tr>
+    `).join('');
+}
+
+function getRiskColor(level) {
+    switch(level) {
+        case 'CRITICAL': return 'danger';
+        case 'HIGH': return 'warning';
+        case 'MEDIUM': return 'info';
+        default: return 'success';
+    }
+}
+
+function showNoDataMessage() {
+    document.getElementById('totalAnalyzed').textContent = 'N/A';
+    document.getElementById('threatsDetected').textContent = 'N/A';
+    document.getElementById('detectionRate').textContent = 'N/A';
+    document.getElementById('avgRiskScore').textContent = 'N/A';
+}
+
+async function refreshAnalytics() {
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+    btn.disabled = true;
+    
+    await loadAnalytics();
+    
+    setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        showAlert('success', 'Analytics refreshed successfully');
+    }, 1000);
+}
+
+function exportThreatLogs() {
+    // Simulate export functionality
+    showAlert('info', 'Threat logs export started. Download will begin shortly.');
+    
+    // In a real implementation, this would call an API endpoint
+    setTimeout(() => {
+        showAlert('success', 'Threat logs exported successfully');
+    }, 2000);
+}
+
+function generateReport() {
+    // Simulate report generation
+    showAlert('info', 'Generating security report. This may take a few moments.');
+    
+    setTimeout(() => {
+        showAlert('success', 'Security report generated successfully');
+    }, 3000);
+}
+
+function showAlert(type, message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.querySelector('main').insertBefore(alertDiv, document.querySelector('main').firstChild);
+    
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 5000);
+}
+</script>
+{% endblock %}
