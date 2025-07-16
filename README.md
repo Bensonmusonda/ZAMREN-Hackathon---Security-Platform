@@ -215,3 +215,4 @@ Key points for your awareness:
  * Review network_analyzer.py: Please take a look at detection_and_logging_system/network_analyzer.py. It now contains new functions (detect_sensitive_data_leak, detect_unusual_response_status, detect_unusual_response_size) that utilize these new response-related fields for advanced threat detection.
  * Action Naming Consistency: The middleware now generates action strings (like GET_THREAT_COUNTS) using underscores instead of hyphens to ensure consistency with the exclusion rules in network_analyzer.py.
 This refactoring centralizes network monitoring, making the IDS more robust and easier to extend with new detection rules in the future. Feel free to reach out if you have any questions!
+
