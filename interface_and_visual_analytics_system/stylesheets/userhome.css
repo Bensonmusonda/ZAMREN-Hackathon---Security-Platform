@@ -1,0 +1,405 @@
+@font-face {
+    font-family: 'inter';
+    src: url('../fonts/Inter/Inter-VariableFont_opsz\,wght.ttf');
+}
+
+:root {
+    --primary-color: #3d3d3d; /* Dark gray for primary actions/text and send button */
+    --accent-color: #007bff; /* (Kept for potential re-use or just as a variable, but not actively used for blue theme) */
+    --bg-main: #e8e8e8; /* Light gray for the main content area background */
+    --bg-sidebar: #ffffff; /* White for navigation and aside */
+    --bg-input-elements: #ffffff; /* White for message box */
+    --text-color-dark: #333333;
+    --text-color-light: #6c757d;
+    --placeholder-color: #999999; /* Lighter placeholder text */
+    --hover-bg-light: #e8e8e8; /* Subtle lighter gray for hover backgrounds (changed to your specified color) */
+    --input-shadow-color: rgba(0,0,0,0.1); /* Consistent shadow for inputs */
+
+    font-size: 16px; /* Base font size */
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 220px 1fr 200px;
+    font-family: 'inter', sans-serif;
+    color: var(--text-color-dark);
+    background-color: var(--bg-sidebar);
+    overflow: hidden;
+}
+
+nav,
+main,
+aside {
+    min-height: 100%;
+    box-sizing: border-box;
+}
+
+nav {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    background-color: var(--bg-sidebar);
+}
+
+.nav-links {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px;
+}
+
+.nav-links a {
+    margin-bottom: 8px;
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding: 10px 15px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    color: var(--text-color-dark); /* Default text color for non-active */
+}
+
+.nav-links a:hover {
+    background-color: var(--hover-bg-light); /* #e8e8e8 for hover */
+    color: var(--text-color-dark); /* Dark text for hover */
+}
+
+.nav-links a.active {
+    background-color: var(--primary-color); /* #3d3d3d for active */
+    color: var(--bg-sidebar); /* White text for active */
+    font-weight: 500;
+}
+
+.folders,
+.nav-footer {
+    padding: 20px;
+    margin-top: 10px;
+    color: var(--text-color-light);
+    font-size: 0.85rem;
+}
+
+/* Main Content Styling */
+main {
+    padding: 20px;
+    background: var(--bg-main);
+    display: flex;
+    flex-direction: column; /* Main is a column */
+    align-items: center; /* Center main items horizontally */
+    /* Removed justify-content: flex-start; to let flex-grow distribute space */
+    overflow: hidden;
+    position: relative;
+}
+
+/* Message Inputs container remains at the top */
+.message-inputs-container {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Increased spacing between select and input */
+    width: 600px;
+    margin-top: 0; /* Ensure no extra top margin */
+    padding-bottom: 20px; /* Space below inputs */
+    box-sizing: border-box;
+    flex-shrink: 0; /* Prevent it from shrinking */
+    margin-bottom: auto; /* Pushes itself to the top, taking only required space */
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.message-type-select,
+.contact-input {
+    font-family: 'inter', sans-serif;
+    font-size: 0.95rem;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 6px;
+    outline: none;
+    transition: background-color 0.2s ease;
+    color: var(--text-color-dark);
+    background-color: var(--bg-main);
+    box-shadow: inset 0 0 0 1px var(--input-shadow-color);
+}
+
+.message-type-select {
+    appearance: none;
+    /* margin-right: 60px; REMOVED this, gap on parent message-inputs-container handles spacing */
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23333333" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+    cursor: pointer;
+}
+
+.message-type-select:hover {
+    background-color: var(--hover-bg-light);
+}
+
+.message-type-select:focus,
+.contact-input:focus {
+    background-color: #f1f1f1;
+    box-shadow: inset 0 0 0 1px var(--primary-color);
+}
+
+.contact-input {
+    width: 250px;
+    flex-shrink: 0;
+    flex-grow: 1;
+}
+.contact-input::placeholder {
+    color: var(--placeholder-color);
+}
+
+/* This is the key container for centering and spacing the welcome text and message box */
+.main-content-area {
+    flex-grow: 1; /* This container takes up all available vertical space in 'main' */
+    display: flex;
+    flex-direction: column; /* Its children (welcome text, message box) are stacked vertically */
+    justify-content: center; /* Vertically center its children within itself */
+    align-items: center; /* Horizontally center its children */
+    width: 100%;
+    /* Removed padding-top and padding-bottom here, rely on gap for spacing between children */
+    box-sizing: border-box;
+    gap: 60px; /* THIS IS THE 60PX GAP BETWEEN WELCOME TEXT AND MESSAGE BOX */
+}
+
+.welcome-text {
+    margin: 0; /* IMPORTANT: Remove all margins, gap on parent handles spacing below */
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--text-color-dark);
+    text-align: center;
+    flex-shrink: 0;
+    /* order: 1; Not strictly necessary if HTML order is correct */
+}
+
+/* Outer container for message box */
+.message-box-outer {
+    height: 250px;
+    width: 600px;
+    flex-shrink: 0;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 0; /* IMPORTANT: Remove all margins, gap on parent handles spacing above */
+    /* order: 2; Not strictly necessary if HTML order is correct */
+}
+
+.message-box {
+    height: 100%;
+    width: 100%;
+    background-color: var(--bg-input-elements);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.message-textarea {
+    flex-grow: 1;
+    width: 100%;
+    padding: 25px; /* More padding for typing area */
+    font-family: 'inter', sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    border: none;
+    resize: none;
+    outline: none;
+    box-sizing: border-box;
+    color: var(--text-color-dark);
+    background-color: transparent;
+}
+
+.message-textarea::placeholder {
+    color: var(--placeholder-color);
+}
+
+.message-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: var(--bg-input-elements);
+    border-top: none;
+}
+
+.attachment-icons {
+    display: flex;
+    gap: 10px;
+}
+
+.icon-button {
+    background-color: transparent;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.icon-button:hover {
+    background-color: var(--hover-bg-light);
+    border-radius: 4px;
+}
+
+.icon-button img {
+    width: 20px;
+    height: 20px;
+    filter: invert(40%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(50%);
+}
+
+.send-button {
+    background-color: var(--primary-color);
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex; /* Flexbox for centering text */
+    align-items: center; /* Vertically center text */
+    justify-content: center; /* Horizontally center text */
+    border-radius: 8px;
+    height: 36px;
+    width: auto;
+    min-width: 80px;
+    box-sizing: border-box;
+    color: var(--bg-sidebar); /* White text for the send button */
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.send-button:hover {
+    background-color: #555555;
+}
+
+.main-footer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-color-light);
+    padding-top: 10px;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
+}
+
+/* Aside Styling */
+aside {
+    padding: 20px;
+    text-align: center;
+    font-size: 1rem;
+    color: var(--text-color-dark);
+    font-weight: 500;
+    background-color: var(--bg-sidebar);
+}
+
+/* --- Media Queries for Responsiveness --- */
+@media (max-width: 1200px) {
+    body {
+        grid-template-columns: 180px 1fr 180px;
+    }
+    .message-inputs-container,
+    .message-box-outer {
+        width: calc(100% - 40px);
+        max-width: 600px;
+    }
+}
+
+@media (max-width: 992px) {
+    body {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+        background-color: var(--bg-main);
+    }
+    nav {
+        background-color: var(--bg-sidebar);
+        padding: 15px 0;
+    }
+    .nav-links {
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 0 10px;
+    }
+    .nav-links a {
+        margin: 5px 10px;
+        padding: 8px 12px;
+    }
+    .folders, .nav-footer {
+        display: none;
+    }
+    aside {
+        background-color: var(--bg-sidebar);
+        padding: 15px;
+    }
+    main {
+        padding: 15px;
+        background-color: var(--bg-main);
+        justify-content: flex-start;
+    }
+    .message-inputs-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 15px;
+        padding-bottom: 0;
+        margin-top: 0; /* Explicitly set to 0 for mobile */
+    }
+    .contact-input {
+        width: 100%;
+    }
+    .main-content-area {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start; /* On mobile, align content to top within this area */
+        align-items: center;
+        width: 100%;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        gap: 25px; /* Adjust gap for mobile as 60px might be too large */
+    }
+    .welcome-text {
+        font-size: 1.6rem;
+        margin: 0; /* Ensure no auto margins on mobile */
+    }
+    .message-box-outer {
+        height: 200px;
+        width: 100%;
+        box-shadow: 0 0 8px rgba(0,0,0,0.05);
+        margin: 0; /* Ensure no auto margins on mobile */
+    }
+    .message-textarea {
+        font-size: 0.9rem;
+        padding: 15px;
+    }
+    .send-button {
+        padding: 6px 12px;
+        height: 32px;
+        min-width: 70px;
+    }
+    .main-footer {
+        position: static;
+        transform: none;
+        width: 100%;
+        text-align: center;
+        margin-top: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    :root {
+        font-size: 14px;
+    }
+}

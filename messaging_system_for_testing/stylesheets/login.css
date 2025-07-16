@@ -1,0 +1,93 @@
+@font-face {
+    font-family: 'inter';
+    src: url('../fonts/Inter/Inter-VariableFont_opsz\,wght.ttf');
+}
+body {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #e8e8e8;
+    font-family: 'inter';
+}
+
+main {
+    width: 600px;
+    /* Use min-height for flexibility, similar to signup.css */
+    min-height: 400px; 
+    box-sizing: border-box;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 7px;
+    background: #fff;
+    height: auto; /* Allow height to adjust based on content */
+}
+
+/* Consistent styling for the message text at the top */
+#message-text {
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 60px; /* Space before inputs, consistent with form margin-top in signup */
+    text-align: center;
+}
+
+/* Styles for the input fields */
+input[type='text'],
+input[type='password'] {
+    width: 300px; /* Consistent width with signup form inputs */
+    height: 30px;
+    box-sizing: border-box;
+    margin-bottom: 15px; /* Spacing between inputs */
+    padding: 5px;
+    border: 1px solid;
+    border-radius: 3px;
+    font-family: 'inter'; /* Ensure font consistency */
+    font-size: 1rem; /* Readable font size */
+}
+
+/* Style for the login button */
+button {
+    width: 300px; /* Make button full width of the inputs for consistency */
+    height: 35px;
+    margin-top: 10px; /* Adjust spacing as needed */
+    border: none;
+    border-radius: 5px;
+    color: #e8e8e8;
+    background: #3d3d3d;
+    font-family: 'inter';
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease; /* Smooth transition for hover */
+}
+
+button:hover {
+    background: #555555; /* Slightly darker on hover */
+}
+
+/* Style for the register link text */
+#register-link-text {
+    margin-top: 20px; /* Space after the button */
+    font-size: 14px;
+}
+#register-link-text a {
+    color: #3d3d3d;
+    text-decoration: none;
+    font-weight: bold;
+}
+#register-link-text a:hover {
+    text-decoration: underline;
+}
+
+/* Styles for error/success messages (used by JavaScript) */
+#message-text.error-message {
+    color: red;
+}
+#message-text.success-message {
+    color: green;
+}

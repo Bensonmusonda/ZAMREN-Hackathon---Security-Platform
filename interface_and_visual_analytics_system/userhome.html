@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Compose email or sms</title>
+        <link rel="stylesheet" href="stylesheets/userhome.css">
+    </head>
+    <body>
+        <nav>
+            <div class="nav-links">
+                <a href="#" class="active">Compose</a>
+                <a href="#">Inbox</a>
+                <a href="#">Sent</a>
+                <a href="#">Spam</a>
+            </div>
+            <div class="folders"></div>
+            <div class="nav-footer"></div>
+        </nav>
+        <main>
+            <div class="message-inputs-container">
+                <div class="input-group">
+                    <label for="message-type" class="sr-only">Message Type</label>
+                    <select name="message-type" id="message-type" class="message-type-select">
+                        <option value="email">Email</option>
+                        <option value="sms">SMS</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="email-or-number" class="sr-only">Email or Number</label>
+                    <input type="text" name="email-or-number" id="email-or-number" placeholder="Recipient Email or Phone Number" class="contact-input">
+                </div>
+            </div>
+
+            <div class="main-content-area">
+                <h1 class="welcome-text">Get started by composing a message...</h1>
+
+                <div class="message-box-outer">
+                    <div class="message-box">
+                        <textarea placeholder="Type your message here..." class="message-textarea"></textarea>
+                        <div class="message-actions">
+                            <div class="attachment-icons">
+                                <button class="icon-button" aria-label="Attach Image">
+                                    <img src="path/to/your/image_attach_icon.svg" alt="Attach Image">
+                                </button>
+                                <button class="icon-button" aria-label="Attach File">
+                                    <img src="path/to/your/file_attach_icon.svg" alt="Attach File">
+                                </button>
+                            </div>
+                            <button class="send-button">
+                                Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div> <div class="main-footer">
+                <p>Your IP address is: 127.0.0.1</p>
+            </div>
+        </main>
+        <aside>
+            <p>Your name</p>
+        </aside>
+    </body>
+</html>

@@ -1,14 +1,49 @@
-# detection_and_logging_system/schemas.py
-
 import uuid
-from pydantic import BaseModel
-from typing import Optional, Dict, Any
+from pydantic import BaseModel, Field
+from typing import Optional, Dict, Any, List
 from datetime import datetime, timezone
-from pydantic import BaseModel, Field 
+
+# --- User Authentication Schemas ---
+class UserCreate(BaseModel):
+    # This is for user registration
+    first_name: str
+    last_name: str
+    email: str
+    phone: str
+    password: str # This will be hashed on the server
+
+class UserOut(BaseModel):
+    # This is for sending user data back (e.g., after registration)
+    username: Optional[str] = None
+    email: str
+    phone: str
+    first_name: str
+    last_name: str
+    disabled: Optional[bool] = None
+
+    class Config:
+        from_attributes = True
+
+class UserInDB(UserOut):
+    # This is for internal server use, includes hashed password
+    hashed_password: str
+
+class Token(BaseModel):
+    # For the JWT response
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    # For decoding JWT payload
+    username: Optional[str] = None # 'sub' claim from JWT
+    email: Optional[str] = None
+    phone: Optional[str] = None
+# --- End User Authentication Schemas ---
+
 
 class EmailDetectionInput(BaseModel):
     source_type: str = "email"
-    detection_id: str = f"detection-{uuid.uuid4().hex[:8]}"
+    detection_id: str = Field(default_factory=lambda: f"detection-{uuid.uuid4().hex[:8]}")
     timestamp: datetime
     email_id: str
     sender: str
@@ -19,10 +54,11 @@ class EmailDetectionInput(BaseModel):
 
 class SMSDetectionInput(BaseModel):
     source_type: str = "sms"
-    detection_id: str = f"detection-{uuid.uuid4().hex[:8]}"
+    detection_id: str = Field(default_factory=lambda: f"detection-{uuid.uuid4().hex[:8]}")
     timestamp: datetime
     sms_id: str
     sender_number: str
+    recipient_number: Optional[str] = None
     message_content: str
     detection_type: str
     confidence_score: Optional[float] = None
@@ -30,7 +66,7 @@ class SMSDetectionInput(BaseModel):
 
 class NetworkDetectionInput(BaseModel):
     source_type: str = "network_ids"
-    detection_id: str = f"detection-{uuid.uuid4().hex[:8]}"
+    detection_id: str = Field(default_factory=lambda: f"detection-{uuid.uuid4().hex[:8]}")
     timestamp: datetime
     event_type: str
     source_ip: str
@@ -54,25 +90,12 @@ class DetectedThreat(BaseModel):
     status: str
     full_details_json: Optional[Dict[str, Any]] = None
 
-    # Optional fields for source-specific details
-    sms_id: Optional[str] = None
-    sender_number: Optional[str] = None
-    message_content: Optional[str] = None
-    email_id: Optional[str] = None
-    sender: Optional[str] = None
-    subject: Optional[str] = None
-    source_ip: Optional[str] = None
-    target_ip: Optional[str] = None
-    port: Optional[str] = None
-    protocol: Optional[str] = None
-    username: Optional[str] = None
-
     class Config:
         from_attributes = True
 
 class RawNetworkLogInput(BaseModel):
     log_source: str
-    timestamp: datetime=Field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     event_description: str
     source_ip: Optional[str] = None
     destination_ip: Optional[str] = None
@@ -81,49 +104,38 @@ class RawNetworkLogInput(BaseModel):
     action: Optional[str] = None
     username: Optional[str] = None
     details: Optional[Dict[str, Any]] = None
+    # --- NEW FIELDS FOR RESPONSE LOGGING ---
+    response_status_code: Optional[int] = None
+    response_content_length: Optional[int] = None
+    response_body_snippet: Optional[str] = None
+    # -------------------------------------
 
-# --- UPDATED: Raw SMS Log Input Schema ---
 class RawSMSLogInput(BaseModel):
-    sms_id: str # Now required, as it's the primary key
+    sms_id: str
     sender_number: str
+    recipient_number: Optional[str] = None
     message_content: str
     timestamp: datetime
     detection_status: str
     details: Optional[Dict[str, Any]] = None
 
-# schemas.py addition
-
 class RawSMSLog(RawSMSLogInput):
-    """
-    Schema for displaying Raw SMS Logs, inheriting from RawSMSLogInput
-    and adding database-specific fields if necessary.
-    """
-    # If your models.RawSMSLog has an 'id' field that's an autoincrementing int
-    # and sms_id is just a unique identifier, you'd add:
-    # id: int
-
     class Config:
-        from_attributes = True # Important for ORM compatibility
+        from_attributes = True
 
 class RawEmailLogInput(BaseModel):
-    email_id: str # This should be a unique identifier for the email
+    email_id: str
     sender: str
-    recipient: Optional[str] = None # Assuming a single primary recipient for simplicity
+    recipients: List[str] = []
     subject: Optional[str] = None
-    body_snippet: Optional[str] = None # A short part of the email body for logging
+    body: Optional[str] = None
     received_timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    detection_status: Optional[str] = None # 'ham', 'spam', 'phishing' if processed by an email manager
-    details: Optional[Dict[str, Any]] = None # Any additional meta-data
+    detection_status: Optional[str] = None
+    details: Optional[Dict[str, Any]] = None
+    attachment_filename: Optional[str] = None
+    attachment_url: Optional[str] = None
+    source_ip: Optional[str] = None # Source IP for email origin
 
 class RawEmailLog(RawEmailLogInput):
-    """
-    Schema for displaying Raw Email Logs, inheriting from RawEmailLogInput
-    and adding ORM compatibility.
-    """
-    # If your models.RawEmailLog has an 'id' field that's an autoincrementing int
-    # you'd add:
-    # id: int
-
     class Config:
-        from_attributes = True # Crucial for ORM conversion
-
+        from_attributes = True

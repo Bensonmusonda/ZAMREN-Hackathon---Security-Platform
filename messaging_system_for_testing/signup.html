@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Register</title>
+        <link rel="stylesheet" href="stylesheets/signup.css">
+    </head>
+    <body>
+        <main>
+            <div id="header">
+                <p id="header-text">Register an account</p>
+            </div>
+            <form>
+                <div class="name-container">
+                    <div class="name" id="first-name">
+                        <p class="label">First name</p>
+                        <input type="text" name="first-name-box" id="first-name-box" required>
+                    </div>
+                    <div class="name" id="last-name">
+                        <p class="label">Last name</p>
+                        <input type="text" name="last-name-box" id="last-name-box" required>
+                    </div>
+                </div>
+                <div class="email-container">
+                    <p class="label">Email</p>
+                    <input type="email" name="email-box" id="email-box" required>
+                </div>
+                <div class="phone-container">
+                    <p class="label">Phone</p>
+                    <input type="text" name="phone-box" id="phone-box">
+                </div>
+                <div class="password-container">
+                    <p class="label">Password</p>
+                    <input type="password" name="password-box" id="password-box" required>
+                </div>
+                <div class="password-confirm-container">
+                    <p class="label">Confirm Password</p>
+                    <input type="password" name="confirm-password-box" id="confirm-password-box" required>
+                </div>
+                <div class="register-container">
+                    <button id="submit">Register</button>
+                </div>
+                <p id="login-text"><a href="login.html">Already have an account? Login</a></p>
+            </form>
+        </main>
+        <script src="scripts/signup_logic.js"></script> </body>
+</html>
