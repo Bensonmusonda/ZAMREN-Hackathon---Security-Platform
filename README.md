@@ -15,6 +15,7 @@ The platform is modular, consisting of several interconnected services. Recent d
  * Centralized Threat Logging: All detected threats (from email, SMS, or network sources) are logged into a unified detected_threats database for easy monitoring and analysis.
  * Visual Analytics Dashboard: Provides a web interface to view threat summaries, raw logs, and detailed insights.
 Project Structure
+---
 ZAMREN Hackathon - Security platform/
 ├── detection_and_logging_system/  # Main IDS API, central logging, and core analysis logic
 │   ├── database.py                # Database connection and session management
@@ -33,6 +34,7 @@ ZAMREN Hackathon - Security platform/
 ├── messaging_system_for_testing/  # Simple frontend for testing email/SMS sending/receiving
 │   └── (html, css, js files)
 └── README.md                      # This file
+---
 
 Prerequisites
 Before setting up the project, ensure you have the following installed:
