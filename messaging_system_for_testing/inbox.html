@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Inbox - Messaging System</title>
+        <link rel="stylesheet" href="stylesheets/userhome.css">
+    </head>
+    <body>
+        <nav>
+            <div class="nav-links">
+                <a href="index.html">Compose</a>
+                <a href="inbox.html" class="active">Inbox</a>
+                <a href="sent.html">Sent</a>
+                <a href="spam.html">Spam</a>
+            </div>
+            <div class="folders"></div>
+            <div class="nav-footer">
+                <button id="logout-button">Logout</button>
+            </div>
+        </nav>
+        <main>
+            <div class="message-filters-container">
+                <div class="input-group">
+                    <label for="message-view-type" class="sr-only">View Type</label>
+                    <select name="message-view-type" id="message-view-type" class="message-type-select">
+                        <option value="email-inbox">Email Inbox</option>
+                        <option value="sms-inbox">SMS Inbox</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="main-content-area">
+                <h1 class="inbox-title">Your Inbox</h1>
+
+                <div class="message-list-container">
+                    <p class="loading-message">Loading messages...</p>
+                </div>
+            </div>
+
+            <div class="main-footer">
+                <p>Your IP address is: 127.0.0.1</p>
+            </div>
+        </main>
+        <aside>
+            <p id="user-display-name">Loading user info...</p>
+        </aside>
+
+        <script src="scripts/inbox_logic.js"></script>
+    </body>
+</html>

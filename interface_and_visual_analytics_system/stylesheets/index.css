@@ -1,182 +1,398 @@
+@font-face {
+    font-family: 'inter';
+    src: url('../fonts/Inter/Inter-VariableFont_opsz\,wght.ttf');
+}
+
+:root {
+    /* Updated Color Palette based on signup.css */
+    --primary-color: #3d3d3d; /* Dark gray for primary actions/text */
+    --primary-dark: #2a2a2a;
+    --danger-color: #dc2626;
+    --warning-color: #d97706;
+    --success-color: #059669;
+    --info-color: #0284c7;
+    --bg-color: #e8e8e8; /* Light gray background */
+    --card-bg: #ffffff; /* White cards */
+    --text-color: #333333; /* Darker text for readability */
+    --text-light: #64748b;
+    --border-color: #cccccc; /* Lighter, subtle borders */
+
+    font-size: 16px; /* Base font size */
+}
+
 body {
     margin: 0;
     padding: 0;
     width: 100vw;
     height: 100vh;
+    box-sizing: border-box;
     display: grid;
-    grid-template-columns: 1fr 4fr;
-    grid-template-rows: 1fr;
+    grid-template-columns: 240px 1fr 320px;
+    font-family: 'inter';
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow: hidden; /* Prevent body scroll */
 }
 
+/* Navigation */
 nav {
     height: 100%;
     display: flex;
     flex-direction: column;
-    background: #e8e8e8;
-    padding: 20px 10px; /* Add some vertical padding, less horizontal */
-    box-sizing: border-box; /* Ensures padding is included in the 100% height */
-    align-items: flex-start; /* Aligns nav items to the start (left) */
-    gap: 15px; /* Space between nav links */
-    border-right: 1px solid #ccc; /* Subtle separator from main content */
+    background: var(--card-bg);
+    padding: 0;
+    /* Removed box-shadow, using border for definition */
+    border-right: 1px solid var(--border-color);
+}
+
+.nav-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 10px;
+}
+
+.nav-header h2 {
+    margin: 0;
+    font-size: 1.2rem; /* Kept original size for nav header */
+    color: var(--primary-color);
 }
 
 nav a {
-    text-decoration: none; /* Remove underline */
-    color: #333; /* Darker text color */
-    font-size: 1.1em; /* Slightly larger font size */
-    padding: 8px 12px; /* Padding inside the link for clickability */
-    border-radius: 5px; /* Slightly rounded corners */
-    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for hover effects */
-    width: 100%; /* Make links fill the available width in the nav */
-    box-sizing: border-box; /* Ensures padding is included in the width */
+    text-decoration: none;
+    color: var(--text-light);
+    font-size: 0.95rem; /* Kept original size for nav links */
+    padding: 12px 20px;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
 }
 
 nav a:hover {
-    background-color: #d0d0d0; /* Lighter background on hover */
-    color: #000; /* Darker text on hover */
+    background-color: #f1f5f9;
+    color: var(--text-color);
 }
 
-nav a:active,
-nav a.active-link { /* You can add an 'active-link' class via JS for the current page */
-    background-color: #c0c0c0; /* Slightly darker active background */
-    color: #000;
-    font-weight: bold; /* Make active link bold */
+nav a.active {
+    border-left: 3px solid var(--primary-color);
+    background-color: #f1f5f9;
+    color: var(--text-color);
+    font-weight: 500;
 }
 
+/* Main Content */
 main {
-    padding: 10px;
+    padding: 20px;
     box-sizing: border-box;
     height: 100%;
-    display: grid;
-    grid-template-rows: 1fr; /* Main has one row, takes full height of its grid cell */
-    grid-template-columns: 2fr 1fr; /* Main content split: detection summary (left) and security insights (right) */
+    display: flex;
+    flex-direction: column;
     gap: 20px;
+    overflow-y: hidden;
 }
 
 .detection-summary {
     display: grid;
-    /* We're splitting the vertical space within the left 'main' column.
-       Let's use specific pixel values or more refined fractions if needed,
-       but for now, relative sizes will distribute available height. */
-    grid-template-rows: 3fr 2fr; /* IDS summary will take 3/5 of vertical space, email/sms 2/5 */
-    grid-template-columns: repeat(2, 1fr); /* Email and SMS will share the bottom row */
+    grid-template-rows: minmax(0, 1.5fr) minmax(0, 1fr);
+    grid-template-columns: 1fr 1fr;
     gap: 20px;
+    flex: 1;
+    min-height: 0;
 }
 
-/* Common styling for all direct children of .detection-summary */
-.detection-summary > div {
-    background: #e8e8e8;
-    padding: 10px;
-    border-radius: 7px;
-    display: flex; /* Arrange h2 and content vertically */
+/* Card Styles */
+.card {
+    background: var(--card-bg);
+    border-radius: 7px; /* Matched signup page's border-radius */
+    /* Removed box-shadow, using border for definition */
+    padding: 20px;
+    display: flex;
     flex-direction: column;
-    box-sizing: border-box;
+    border: 1px solid var(--border-color); /* Subtle border for cards */
+    overflow: hidden;
+}
+
+.card h2 {
+    margin: 0 0 15px 0;
+    font-size: 1.1rem;
+    color: var(--text-color);
+    font-weight: 600;
 }
 
 .ids-summary {
-    grid-column: 1 / span 2; /* IDS summary spans both columns in the top row */
-}
-
-.ids-summary-content {
-    flex: 1; /* This makes ids-summary-content fill the remaining space below the h2 */
+    grid-column: 1 / span 2;
     display: flex;
-    flex-direction: column; /* Arrange table and breakdown vertically */
-    gap: 10px; /* Space between table and breakdown */
-    /* NO min-height: 0 here if we want the children to define overall size */
+    flex-direction: column;
+    min-height: 0;
 }
 
-.detected-threats {
-    background: #fff;
-    padding: 10px;
-    border-radius: 7px;
-    box-sizing: border-box;
-    /* --- THE CRITICAL CHANGE FOR RIGIDITY --- */
-    /* Set a fixed height in pixels. This will determine the exact visual size.
-       You'll need to fine-tune this value for 1920x1080.
-       Let's estimate a reasonable pixel height based on typical screen usage. */
-    height: 180px; /* Example fixed height. ADJUST THIS VALUE as needed. */
-    overflow-y: auto; /* Enable scrolling if content exceeds this height */
-    /* The space below was caused by flex: 1 combined with content not filling it.
-       By setting a fixed height, it will always be this size. */
-}
-
-.breakdown {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    /* This element will simply take its intrinsic height */
-}
-
-.breakdown > div {
-    aspect-ratio: 1 / 1;
-    background: #fff;
-    border-radius: 7px;
-    flex: 1; /* Items within breakdown still share space horizontally */
-}
-
-/* --- Email and SMS Sections (adjusted for consistency) --- */
+.ids-summary-content,
 .email-detection-summary-content,
 .sms-detection-summary-content {
-    flex: 1; /* Fill remaining vertical space in parent flex column */
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
+    min-height: 0;
 }
 
+/* Table Containers */
+.detected-threats,
 .emails-recieved,
 .sms-recieved {
-    background: #fff;
-    padding: 10px;
-    border-radius: 7px;
+    background: var(--card-bg);
+    border-radius: 6px;
     box-sizing: border-box;
-    /* --- THE CRITICAL CHANGE FOR RIGIDITY --- */
-    /* Set a fixed height in pixels. ADJUST THIS VALUE as needed. */
-    height: 180px; /* Example fixed height. ADJUST THIS VALUE as needed. */
-    overflow-y: auto; /* Enable scrolling if content exceeds this height */
+    flex: 1;
+    overflow-y: auto;
+    border: 1px solid var(--border-color); /* Subtle border for table containers */
 }
 
-.emails-threats-breakdown,
-.sms-threats-breakdown {
+/* Metric Cards */
+.breakdown {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
 }
 
-.emails-threats-breakdown > div,
-.sms-threats-breakdown > div {
-    height: 100%; /* Fill their grid cell */
-    background: #fff;
-    border-radius: 7px;
+.email-detection-summary-content .emails-threats-breakdown,
+.sms-detection-summary-content .sms-threats-breakdown {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
 }
 
-#security-insights { /* Using ID selector as per your HTML */
-    background: #e8e8e8;
-    border-radius: 7px;
+.metric-card {
+    background: var(--card-bg);
+    border-radius: 8px;
     padding: 10px;
-    box-sizing: border-box;
-    display: flex; /* Arrange h2 and table-container vertically */
+    display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    border: 1px solid var(--border-color); /* Subtle border */
+    /* Removed box-shadow */
 }
 
+/* Removed the ::before pseudo-element for colored bars */
+.metric-card::before {
+    display: none;
+}
 
-/* Common table styles (kept as before) */
+.metric-card span {
+    font-size: 0.75rem;
+    color: var(--text-light);
+}
+
+.metric-card strong {
+    font-size: 1.2rem;
+    /* Color will be applied via JavaScript */
+}
+
+/* ===== TABLE SPECIFIC STYLES ===== */
+.table-container {
+    width: 100%;
+    height: 100%;
+    overflow-x: auto; /* Horizontal scroll for small screens */
+    overflow-y: auto; /* Keep vertical scroll */
+}
+
 .table-container table {
-    margin: 0;
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed; /* Critical for column width control */
 }
 
-.table-container th,
-.table-container td {
-    padding: 8px;
-    box-sizing: border-box;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
+/* Header styles */
 .table-container th {
-    background-color: #f2f2f2;
     position: sticky;
     top: 0;
-    z-index: 1;
+    background-color: var(--card-bg);
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-light);
+    border-bottom: 2px solid var(--border-color);
+    z-index: 2;
+    white-space: nowrap;
+}
+
+/* Cell styles */
+.table-container td {
+    padding: 8px 12px;
+    font-size: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: top;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Hover effect */
+.table-container tr:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Column-specific treatments */
+.table-container td:nth-child(1), /* Timestamp columns */
+.table-container th:nth-child(1) {
+    width: 20%;
+}
+
+.table-container td:nth-child(2), /* Sender/Source columns */
+.table-container th:nth-child(2) {
+    width: 25%;
+}
+
+.table-container td:nth-child(3), /* Content/Subject columns */
+.table-container th:nth-child(3) {
+    width: 35%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table-container td:nth-child(4), /* Status columns */
+.table-container th:nth-child(4) {
+    width: 20%;
+    text-align: center;
+}
+
+/* Special handling for security insights table */
+#security-insights .table-container td,
+#security-insights .table-container th {
+    padding: 8px 10px;
+    font-size: 0.72rem;
+}
+
+#security-insights .table-container td:nth-child(3) {
+    white-space: normal; /* Allow wrapping for threat descriptions */
+}
+
+/* Status badge styling */
+.status-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.status-badge.spam {
+    background-color: rgba(220, 38, 38, 0.1);
+    color: var(--danger-color);
+}
+
+.status-badge.ham {
+    background-color: rgba(5, 150, 105, 0.1);
+    color: var(--success-color);
+}
+
+/* No data placeholder */
+.no-data {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-light);
+    font-style: italic;
+    font-size: 0.85rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .table-container th,
+    .table-container td {
+        padding: 8px 10px;
+        font-size: 0.7rem;
+    }
+    
+    .table-container td:nth-child(3) {
+        max-width: 150px; /* Further restrict content columns */
+    }
+}
+
+@media (max-width: 768px) {
+    .table-container {
+        overflow-x: scroll; /* Force horizontal scroll on mobile */
+    }
+    
+    .table-container table {
+        min-width: 600px; /* Minimum table width */
+    }
+    
+    .table-container th,
+    .table-container td {
+        padding: 6px 8px;
+        font-size: 0.65rem;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+    .breakdown {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    :root {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 1200px) {
+    body {
+        grid-template-columns: 200px 1fr;
+    }
+    #security-insights {
+        display: none;
+    }
+    :root {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 900px) {
+    body {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+    }
+    nav {
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        box-shadow: none;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .nav-header {
+        width: 100%;
+        text-align: center;
+        border-bottom: none;
+    }
+    nav a {
+        flex: 1;
+        text-align: center;
+        border-left: none;
+        border-bottom: 3px solid transparent;
+    }
+    nav a.active {
+        border-left: none;
+        border-bottom: 3px solid var(--primary-color);
+    }
+    main {
+        padding-top: 10px;
+    }
+    .detection-summary {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+    }
+    .ids-summary {
+        grid-column: auto;
+    }
+    .breakdown {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .email-detection-summary-content .emails-threats-breakdown,
+    .sms-detection-summary-content .sms-threats-breakdown {
+        grid-template-columns: 1fr;
+    }
 }

@@ -1,0 +1,131 @@
+@font-face {
+    font-family: 'inter';
+    src: url('../fonts/Inter/Inter-VariableFont_opsz\,wght.ttf');
+}
+body {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #e8e8e8;
+    font-family: 'inter';
+}
+
+main {
+    width: 600px;
+    /* Changed from fixed height to min-height to accommodate new fields */
+    min-height: 400px; 
+    box-sizing: border-box;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 7px;
+    background: #fff;
+    /* Added some flexibility if content grows taller than 400px */
+    height: auto; 
+}
+
+#header {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#header-text {
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+form {
+    margin-top: 60px;
+    width: 300px;
+}
+
+/* Existing rules grouped, new password containers added */
+.email-container,
+.phone-container,
+.password-container, /* NEW */
+.password-confirm-container, /* NEW */
+.register-container {
+    width: 100%;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ensure all input types are consistently styled */
+input[type='text'],
+input[type='email'], /* Added for consistency with email-box */
+input[type='password'] { /* NEW: for password fields */
+    height: 30px;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 5px;
+    border: 1px solid;
+    border-radius: 3px;
+}
+
+.name-container {
+    width: 100%;
+    margin: 0;
+    margin-bottom: 10px;
+    padding: 0;
+    display: flex;
+    justify-content: space-between
+}
+
+.name {
+    width: 48%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+button {
+    width: 48%;
+    height: 35px;
+    margin-top: 20px;
+    align-self: end; /* This was for a single button on its own row, if it's inside .register-container which is flex-column, you might need to adjust or remove this */
+    border: none;
+    border-radius: 5px;
+    color: #e8e8e8;
+    background: #3d3d3d;
+    font-family: 'inter';
+    font-weight: 700;
+    cursor: pointer; /* Add pointer cursor for better UX */
+}
+
+/* Added style for the new link on signup page */
+#login-text {
+    margin-top: 15px; /* Adjust spacing as needed */
+    font-size: 14px;
+}
+#login-text a {
+    color: #3d3d3d;
+    text-decoration: none;
+    font-weight: bold;
+}
+#login-text a:hover {
+    text-decoration: underline;
+}
+
+/* For messages displayed above form */
+#header-text.error-message {
+    color: red;
+}
+#header-text.success-message {
+    color: green;
+}
