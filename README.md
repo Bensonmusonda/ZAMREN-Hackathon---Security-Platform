@@ -335,3 +335,7 @@ A `LoggingMiddleware` has been implemented in `detection_and_logging_system/main
   * **Action String Consistency:** The middleware generates `action` strings (e.g., `GET_THREAT_COUNTS`) by converting path segments (e.g., replacing hyphens with underscores and converting to uppercase) to ensure consistency with predefined exclusion rules in `network_analyzer.py`.
 
 This refactoring centralizes network monitoring, enhancing the IDS's robustness and extensibility for future detection rule development.
+
+## License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details. In short: you're free to use, modify, and distribute this code, including commercially, as long as the original copyright notice is kept.
