@@ -3,7 +3,7 @@
 
 This repository contains the core components of the ZAMREN Security Platform, an Intrusion Detection System (IDS) designed to monitor and analyze network, email, and SMS traffic for suspicious activities and potential threats.
 
-## 🌟 Key Features
+## Key Features
 
 The platform is modular, consisting of several interconnected services. Recent developments have significantly enhanced its network monitoring capabilities:
 
@@ -26,7 +26,7 @@ The platform is modular, consisting of several interconnected services. Recent d
 
   * **Visual Analytics Dashboard:** Offers a web interface to visualize threat summaries, raw logs, and detailed security insights.
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 ZAMREN Hackathon - Security platform/
@@ -61,7 +61,7 @@ Before setting up the project, ensure you have the following installed:
 
   * **`psql`** command-line client (for database setup)
 
-## 🚀 Setup Instructions
+## Setup Instructions
 
 Follow these steps to get all services running locally.
 
@@ -312,7 +312,7 @@ This test confirms the detection of unexpected HTTP status codes.
 
 6.  **IMMEDIATELY REVERT THE CODE CHANGE IN `main.py` AND RESTART YOUR MAIN IDS.**
 
-## 📝 Architectural Notes & Development Considerations
+## Architectural Notes & Development Considerations
 
 This section highlights significant architectural changes and considerations for developers contributing to the project.
 
