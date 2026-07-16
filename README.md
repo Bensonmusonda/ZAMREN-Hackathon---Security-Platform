@@ -215,7 +215,7 @@ python -m http.server 5501
 
 Once all services are running, the main dashboard can be accessed at `http://localhost:5500` and the testing messaging system at `http://localhost:5501`.
 
-## ✅ Testing the New Network Analysis Features
+## Testing the New Network Analysis Features
 
 These tests demonstrate the enhanced network monitoring capabilities of the Main IDS. Ensure all services are running as described in the "Run the Subsystems" section.
 
